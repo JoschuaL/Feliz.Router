@@ -1,5 +1,5 @@
 language: csharp
-dotnet: 6.0.400
+dotnet: 10.0.203
 dist: trusty
 sudo: required
 addons:

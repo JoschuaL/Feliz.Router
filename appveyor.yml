@@ -13,7 +13,7 @@ cache:
 # Install scripts. (runs after repo cloning)
 install:
   # install latest dotnet core 3 preview
-  - cmd: choco install dotnetcore-sdk --pre
+  - cmd: choco install dotnet-10.0-sdk
   - cmd: dotnet tool restore
   - cmd: npm install
   # Get the latest stable version of Node.js
