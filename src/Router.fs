@@ -152,7 +152,23 @@ module Router =
         |> urlChanged
 
     let router = React.memo(fun (input: RouterProps) ->
-        let onChange = React.useCallbackRef(fun (ev: Event) ->
+        let useCallbackRef (callback: 'T -> unit) =
+            let callbackRef = React.useRef(callback)
+
+            React.useEffect(
+                (fun () ->
+                    callbackRef.current <- callback
+                ),
+                [| callback :> obj |]
+            )
+
+            React.useCallback(
+                (fun arg ->
+                    callbackRef.current arg
+                ),
+                [||]
+            )
+        let onChange = useCallbackRef(fun (ev: Event) ->
             let urlChanged = Option.defaultValue ignore input.onUrlChanged
             let routeMode = Option.defaultValue RouteMode.Hash input.hashMode
             onUrlChange routeMode urlChanged ev)
@@ -166,7 +182,7 @@ module Router =
             
             window.addEventListener(customNavigationEvent, onChange)
 
-            React.createDisposable(fun () ->
+            FsReact.createDisposable(fun () ->
                 if navigatorUserAgent.Contains "Trident" || navigatorUserAgent.Contains "MSIE" then
                     window.removeEventListener("hashchange", onChange)
                 else 
@@ -195,7 +211,7 @@ module ReactExtension =
     type React with
         /// Initializes the router as an element of the page and starts listening to URL changes.
         static member inline router (props: IRouterProperty list) =
-            Router.router (unbox<Router.RouterProps> (createObj !!props))
+            React.memoRender(Router.router, (unbox<Router.RouterProps> (createObj !!props)))
 
 [<Erase>]
 type router =
@@ -229,7 +245,7 @@ type router =
     /// The content that is rendered inside where the `router` is placed. Usually this contains the root application but it could also be part of another root element.
     ///
     /// It will keep listening for URL changes as long as the `router` is rendered on screen somewhere.
-    static member inline children (elements: ReactElement list) : IRouterProperty = unbox ("application", React.fragment elements)
+    static member inline children (elements: ReactElement list) : IRouterProperty = unbox ("application", React.Fragment elements)
 
     /// Use # based routes (default)
     static member inline hashMode : IRouterProperty = unbox ("hashMode", RouteMode.Hash)
