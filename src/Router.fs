@@ -101,6 +101,7 @@ module Router =
 
     let nav xs (mode: HistoryMode) (routeMode: RouteMode) =
         if mode = HistoryMode.PushState
+        #nowarn "3397"
         then history.pushState ((), "", encodeParts xs routeMode)
         else history.replaceState((), "", encodeParts xs routeMode)
 
