@@ -3,22 +3,25 @@
   "isRoot": true,
   "tools": {
     "paket": {
-      "version": "5.257.0",
+      "version": "10.3.1",
       "commands": [
         "paket"
-      ]
+      ],
+      "rollForward": false
     },
     "fake-cli": {
       "version": "5.20.4-alpha.1642",
       "commands": [
         "fake"
-      ]
+      ],
+      "rollForward": false
     },
     "fable": {
       "version": "4.0.0-theta-018",
       "commands": [
         "fable"
-      ]
+      ],
+      "rollForward": false
     }
   }
 }
